@@ -1,3 +1,6 @@
+--// Main script – UI is already loaded by the loader
+--// The UI table is available as 'UI' in the environment
+
 --// Autofarm Variables
 local autoFarmRunning = false
 local autoFarmThread = nil
@@ -25,14 +28,12 @@ end
 
 -- Main autofarm loop
 local function startAutofarm()
-    -- Teleport once when we start
     teleportTo(TELEPORT_POS)
     print("[Autofarm] Teleported to", TELEPORT_POS)
-
     autoFarmRunning = true
     while autoFarmRunning do
         fireRemote()
-        wait(0.15)  -- fire every 0.15 seconds
+        wait(0.15)
     end
 end
 
@@ -40,7 +41,6 @@ end
 UI.Toggles.autofarm:SetCallback(function(value)
     print("Autofarm toggled:", value)
     if value then
-        -- Stop any previous thread
         if autoFarmThread then
             autoFarmRunning = false
             wait(0.2)
