@@ -5,6 +5,15 @@ if not UI then
     return
 end
 
+if not UI.Toggles then
+    warn("[Main] UI.Toggles is nil – UI structure may be incorrect")
+    -- Try to find toggles by scanning UI
+    print("[Main] Available UI fields:", table.concat(table.keys(UI), ", "))
+    return
+end
+
+print("[Main] UI.Toggles found, autofarm toggle exists?", tostring(UI.Toggles.autofarm ~= nil))
+
 --// Autofarm Variables
 local autoFarmRunning = false
 local autoFarmThread = nil
@@ -42,8 +51,9 @@ local function startAutofarm()
 end
 
 -- Override the autofarm toggle callback
-if UI.Toggles and UI.Toggles.autofarm then
-    UI.Toggles.autofarm:SetCallback(function(value)
+local autofarmToggle = UI.Toggles.autofarm
+if autofarmToggle then
+    autofarmToggle:SetCallback(function(value)
         print("Autofarm toggled:", value)
         if value then
             if autoFarmThread then
@@ -61,7 +71,7 @@ if UI.Toggles and UI.Toggles.autofarm then
         end
     end)
 else
-    warn("[Main] Autofarm toggle not found in UI")
+    warn("[Main] Autofarm toggle not found – check UI structure")
 end
 
 print("Main script loaded – ready to cheat!")
