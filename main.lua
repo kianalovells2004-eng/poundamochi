@@ -1,6 +1,3 @@
---// Load the UI (update the raw URL to your repo)
-local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/YourUsername/YourRepo/main/ui.lua"))()
-
 --// Autofarm Variables
 local autoFarmRunning = false
 local autoFarmThread = nil
