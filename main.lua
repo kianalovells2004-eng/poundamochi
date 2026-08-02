@@ -1,5 +1,9 @@
---// Main script – UI is already loaded by the loader
---// The UI table is available as 'UI' in the environment
+--// Main script – uses UI from _G.UI
+local UI = _G.UI
+if not UI then
+    warn("[Main] UI not found – make sure loader runs first")
+    return
+end
 
 --// Autofarm Variables
 local autoFarmRunning = false
@@ -37,23 +41,27 @@ local function startAutofarm()
     end
 end
 
---// Override the autofarm toggle callback
-UI.Toggles.autofarm:SetCallback(function(value)
-    print("Autofarm toggled:", value)
-    if value then
-        if autoFarmThread then
+-- Override the autofarm toggle callback
+if UI.Toggles and UI.Toggles.autofarm then
+    UI.Toggles.autofarm:SetCallback(function(value)
+        print("Autofarm toggled:", value)
+        if value then
+            if autoFarmThread then
+                autoFarmRunning = false
+                wait(0.2)
+                autoFarmThread = nil
+            end
+            autoFarmRunning = true
+            autoFarmThread = spawn(startAutofarm)
+        else
             autoFarmRunning = false
-            wait(0.2)
-            autoFarmThread = nil
+            if autoFarmThread then
+                autoFarmThread = nil
+            end
         end
-        autoFarmRunning = true
-        autoFarmThread = spawn(startAutofarm)
-    else
-        autoFarmRunning = false
-        if autoFarmThread then
-            autoFarmThread = nil
-        end
-    end
-end)
+    end)
+else
+    warn("[Main] Autofarm toggle not found in UI")
+end
 
 print("Main script loaded – ready to cheat!")
